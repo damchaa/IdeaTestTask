@@ -15,8 +15,6 @@ public class TicketService {
     private List<Flying> tickets;
 
 
-
-
     public List<Flying> getTickets() {
         return tickets;
     }
@@ -25,17 +23,16 @@ public class TicketService {
         this.tickets = tickets;
     }
 
-    public static List<Flying> findTicket(List<Flying> tickets ) {
+    public static List<Flying> findTicket(List<Flying> tickets) {
         List<Flying> filteredList = new ArrayList<>();
-        tickets.stream().filter(flying -> flying.getOrigin().equals("VVO") && flying.getDestination().equals("TLV")).forEach(filteredList::add);
+        tickets.stream().filter(flying -> flying.getOrigin().equals("VVO") && flying.getDestination()
+                .equals("TLV")).forEach(filteredList::add);
         return filteredList;
     }
 
     public static void getMinFly(List<Flying> tickets) throws IOException {
         List<Flying> filteredList = findTicket(tickets);
-
         filteredList.forEach(flying -> {
-
             String departureDate = flying.getDeparture_date();
             String departureTime = flying.getDeparture_time();
             String arrivalDate = flying.getArrival_date();
@@ -51,8 +48,6 @@ public class TicketService {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-
-
         });
 
 
@@ -70,6 +65,4 @@ public class TicketService {
         double price = filteredList.stream().mapToInt(Flying::getPrice).average().orElse(0);
         return price - median;
     }
-
-
 }

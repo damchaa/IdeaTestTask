@@ -48,8 +48,11 @@ public class Main {
         }
         try {
             FileWriter writer = new FileWriter("result.txt");
-            writer.write("Минимальное время полета: " + duration.toHours() + " часов " + duration.toMinutes() % 60 + " минут  \n");
-            writer.write("Разница между средней ценой и медианой: " + difference);
+            String result = String.format("Минимальное время полета: %d часов  %d минут,\nРазница между средней ценой и медианой: : %f ",
+                    duration.toHours() , duration.toMinutes() % 60 , difference);
+
+            writer.write(result);
+
             writer.close();
         } catch (IOException e) {
             System.out.println("Ошибка при записи в файл");
