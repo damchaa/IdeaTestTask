@@ -20,17 +20,14 @@ public class Main {
 
         String fileName = "tickets.json";
         ObjectMapper mapper = new ObjectMapper();
-        TicketService ticketsService = mapper.readValue(new File(fileName), new TypeReference<>() {});
+        TicketService ticketsService = mapper.readValue(new File(fileName), new TypeReference<>() {
+        });
         TicketService.getMinFly(ticketsService.getTickets());
         double difference = TicketService.getDifference(ticketsService.getTickets());
-        writeToFile(minTimeFly,difference);
-
+        writeToFile(minTimeFly, difference);
 
 
     }
-
-
-
 
 
     public static void writeToFile(Long minTimeFly, double difference) {
@@ -49,7 +46,7 @@ public class Main {
         try {
             FileWriter writer = new FileWriter("result.txt");
             String result = String.format("Минимальное время полета: %d часов  %d минут,\nРазница между средней ценой и медианой: : %f ",
-                    duration.toHours() , duration.toMinutes() % 60 , difference);
+                    duration.toHours(), duration.toMinutes() % 60, difference);
 
             writer.write(result);
 

@@ -4,9 +4,7 @@ package org.example;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class TicketService {
 
@@ -55,12 +53,15 @@ public class TicketService {
 
     public static double getDifference(List<Flying> tickets) {
         List<Flying> filteredList = findTicket(tickets);
+        List<Integer> flyingPrice = new ArrayList<>();
+        filteredList.forEach(flying -> flyingPrice.add(flying.getPrice()));
+        Collections.sort(flyingPrice);
         double median;
-        int size = filteredList.size();
+        int size = flyingPrice.size();
         if (size % 2 == 0) {
-            median = filteredList.get(size / 2 - 1).getPrice() + (tickets.get(size / 2).getPrice() / 2.0);
+            median = flyingPrice.get(size / 2 - 1) + (flyingPrice.get(size / 2) / 2.0);
         } else {
-            median = (filteredList.get(size / 2)).getPrice();
+            median = (flyingPrice.get(size / 2));
         }
         double price = filteredList.stream().mapToInt(Flying::getPrice).average().orElse(0);
         return price - median;
