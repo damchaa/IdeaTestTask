@@ -11,17 +11,11 @@ import java.util.List;
 public class TicketService {
 
 
-    private long minTimeFly = 1000000000;
+    static long minTimeFly = 1000000000;
     private List<Flying> tickets;
 
 
-    public long getMinTimeFly() {
-        return minTimeFly;
-    }
 
-    public void setMinTimeFly(long minTimeFly) {
-        this.minTimeFly = minTimeFly;
-    }
 
     public List<Flying> getTickets() {
         return tickets;
@@ -31,27 +25,28 @@ public class TicketService {
         this.tickets = tickets;
     }
 
-    public static List<Flying> findTicket(TicketService tickets) {
-        List<Flying> reqList = new ArrayList<>();
-        tickets.getTickets().stream().filter(flying -> flying.getOrigin().equals("VVO") && flying.getDestination().equals("TLV")).forEach(reqList::add);
-        return reqList;
+    public static List<Flying> findTicket(List<Flying> tickets ) {
+        List<Flying> filteredList = new ArrayList<>();
+        tickets.stream().filter(flying -> flying.getOrigin().equals("VVO") && flying.getDestination().equals("TLV")).forEach(filteredList::add);
+        return filteredList;
     }
 
-    public static void getMinFly(TicketService tickets) throws IOException {
+    public static void getMinFly(List<Flying> tickets) throws IOException {
+        List<Flying> filteredList = findTicket(tickets);
 
-        findTicket(tickets).forEach(flying -> {
+        filteredList.forEach(flying -> {
+
             String departureDate = flying.getDeparture_date();
             String departureTime = flying.getDeparture_time();
             String arrivalDate = flying.getArrival_date();
             String arrivalTime = flying.getArrival_time();
             SimpleDateFormat format = new SimpleDateFormat("d.MM.yy HH:mm");
-
             try {
                 Date dateDeparture = format.parse(departureDate + " " + departureTime);
                 Date dateArrival = format.parse(arrivalDate + " " + arrivalTime);
-                if (tickets.getMinTimeFly() > (dateArrival.getTime() - dateDeparture.getTime())) {
+                if (minTimeFly > (dateArrival.getTime() - dateDeparture.getTime())) {
 
-                    tickets.setMinTimeFly(dateArrival.getTime() - dateDeparture.getTime());
+                    minTimeFly = (dateArrival.getTime() - dateDeparture.getTime());
                 }
             } catch (ParseException e) {
                 throw new RuntimeException(e);
@@ -63,16 +58,16 @@ public class TicketService {
 
     }
 
-    public static double getDifference(TicketService tickets) {
-        List<Flying> filteredTicket = findTicket(tickets);
+    public static double getDifference(List<Flying> tickets) {
+        List<Flying> filteredList = findTicket(tickets);
         double median;
-        int size = filteredTicket.size();
+        int size = filteredList.size();
         if (size % 2 == 0) {
-            median = filteredTicket.get(size / 2 - 1).getPrice() + (filteredTicket.get(size / 2).getPrice() / 2.0);
+            median = filteredList.get(size / 2 - 1).getPrice() + (tickets.get(size / 2).getPrice() / 2.0);
         } else {
-            median = (filteredTicket.get(size / 2)).getPrice();
+            median = (filteredList.get(size / 2)).getPrice();
         }
-        double price = filteredTicket.stream().mapToInt(Flying::getPrice).average().orElse(0);
+        double price = filteredList.stream().mapToInt(Flying::getPrice).average().orElse(0);
         return price - median;
     }
 

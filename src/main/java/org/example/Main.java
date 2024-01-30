@@ -7,11 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Date;
-import java.util.List;
+
+
+import static org.example.TicketService.minTimeFly;
 
 
 public class Main {
@@ -21,10 +20,10 @@ public class Main {
 
         String fileName = "tickets.json";
         ObjectMapper mapper = new ObjectMapper();
-        TicketService tickets = mapper.readValue(new File(fileName), new TypeReference<>() {});
-        TicketService.getMinFly(tickets);
-        double difference = TicketService.getDifference(tickets);
-        writeToFile(tickets.getMinTimeFly(),difference);
+        TicketService ticketsService = mapper.readValue(new File(fileName), new TypeReference<>() {});
+        TicketService.getMinFly(ticketsService.getTickets());
+        double difference = TicketService.getDifference(ticketsService.getTickets());
+        writeToFile(minTimeFly,difference);
 
 
 
