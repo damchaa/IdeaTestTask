@@ -8,9 +8,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
-
-import static org.example.TicketService.minTimeFly;
+import static org.example.TicketService.*;
 
 
 public class Main {
@@ -24,14 +25,14 @@ public class Main {
         });
         TicketService.getMinFly(ticketsService.getTickets());
         double difference = TicketService.getDifference(ticketsService.getTickets());
-        writeToFile(minTimeFly, difference);
+        writeToFile(getCompanyWithTime(ticketsService.getTickets()), difference);
 
 
     }
 
 
-    public static void writeToFile(Long minTimeFly, double difference) {
-        Duration duration = Duration.ofMillis(minTimeFly);
+    public static void writeToFile(Map<String,Long> countryWithTime, double difference) {
+
         try {
             File file = new File("result.txt");
             if (file.createNewFile()) {
@@ -45,10 +46,17 @@ public class Main {
         }
         try {
             FileWriter writer = new FileWriter("result.txt");
-            String result = String.format("Минимальное время полета: %d часов  %d минут,\nРазница между средней ценой и медианой: : %f ",
-                    duration.toHours(), duration.toMinutes() % 60, difference);
 
-            writer.write(result);
+            String resultDifference = String.format("Разница между средней ценой и медианой: : %f \n"
+                    , difference);
+            writer.write(resultDifference);
+            for (Map.Entry<String,Long>entry: countryWithTime.entrySet()){
+                Duration duration = Duration.ofMillis(entry.getValue());
+                String resultTime =  String.format("Минимальное время полета для авиакомпании %s : %d часов  %d минут,\n",
+                        entry.getKey(), duration.toHours(),duration.toMinutes() % 60 );
+                writer.write(resultTime);
+            }
+
 
             writer.close();
         } catch (IOException e) {
