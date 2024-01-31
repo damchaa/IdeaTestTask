@@ -23,7 +23,6 @@ public class Main {
         ObjectMapper mapper = new ObjectMapper();
         TicketService ticketsService = mapper.readValue(new File(fileName), new TypeReference<>() {
         });
-        TicketService.getMinFly(ticketsService.getTickets());
         double difference = TicketService.getDifference(ticketsService.getTickets());
         writeToFile(getCompanyWithTime(ticketsService.getTickets()), difference);
 
