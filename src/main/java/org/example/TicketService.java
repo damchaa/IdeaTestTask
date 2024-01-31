@@ -56,14 +56,18 @@ public class TicketService {
         List<Integer> flyingPrice = new ArrayList<>();
         filteredList.forEach(flying -> flyingPrice.add(flying.getPrice()));
         Collections.sort(flyingPrice);
+        System.out.println(flyingPrice);
         double median;
         int size = flyingPrice.size();
         if (size % 2 == 0) {
-            median = flyingPrice.get(size / 2 - 1) + (flyingPrice.get(size / 2) / 2.0);
+            median = (flyingPrice.get(size / 2 - 1) + (flyingPrice.get(size / 2) ))/ 2.0;
         } else {
             median = (flyingPrice.get(size / 2));
+
         }
+
         double price = filteredList.stream().mapToInt(Flying::getPrice).average().orElse(0);
+        System.out.println(price-median);
         return price - median;
     }
 }
